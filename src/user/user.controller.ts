@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@
 import { CreateUserDto } from './dto/create-user.dto';
 import { ShowUserDto } from './dto/show-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './model/user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -17,6 +18,17 @@ export class UserController {
   oneUser(@Param('id' ,ParseIntPipe) id:number):Promise<ShowUserDto>{
     return this.userService.findOne(id).then(user=>user.toDto());
   }
+  @Get('relation/:id')
+  userRelation(@Param('id', ParseIntPipe) id:number):Promise<User>{
+
+    return this.userService.findRelation(id);
+  }
+
+  @Get('name/:username')
+  findUserByName(@Param('username')username:string):Promise<ShowUserDto>{
+    return this.userService.findByName(username).then(user=>user.toDto());
+  }
+
   @Put(':id')
   async update(@Param('id' ,ParseIntPipe) id:number,  @Body() updateUserDto: UpdateUserDto) : Promise<string>{
     await this.userService.update(id,updateUserDto);

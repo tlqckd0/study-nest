@@ -12,13 +12,29 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-
   findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
   findOne(id: number): Promise<User> {
     return this.userRepository.findOne(id);
+  }
+
+  findByName(username:string):Promise<User>{
+    return this.userRepository.findOne({where:{username}});
+  }
+
+  findRelation(id:number):Promise<User> {
+    return this.userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.relations','relation')
+    .where('user.id = :id', {id})
+    .getOne();
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<void> {
+    await this.userRepository.save(createUserDto.toEntity());
+    //여기서 DB에 저장하자.
   }
 
   async update(id:number, updateUserDto: UpdateUserDto): Promise<void>{
@@ -30,8 +46,5 @@ export class UserService {
     await this.userRepository.delete(id);
   }
 
-  async create(createUserDto: CreateUserDto): Promise<void> {
-    await this.userRepository.save(createUserDto.toEntity());
-    //여기서 DB에 저장하자.
-  }
+
 }

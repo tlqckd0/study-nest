@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Relation } from 'src/relation/model/relation.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ShowUserDto } from '../dto/show-user.dto';
 
 @Entity()
@@ -12,11 +13,14 @@ export class User {
   @Column()
   password: string;
 
-  toDto():ShowUserDto{
-      const dto = new ShowUserDto();
-      dto.id = this.id;
-      dto.username = this.username;
+  @OneToMany(type=>Relation, relation=> relation.user)
+  relations : Relation[];
 
-      return dto;
+  toDto(): ShowUserDto {
+    const dto = new ShowUserDto();
+    dto.id = this.id;
+    dto.username = this.username;
+
+    return dto;
   }
 }
