@@ -17,7 +17,7 @@ import { UserModule } from './user/user.module';
   imports:[CatsModule,UserModule,RelationModel,AuthModule,
     ConfigModule.forRoot({
       isGlobal:true,
-      envFilePath:['.env.database.local']
+      envFilePath:['.env']
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
